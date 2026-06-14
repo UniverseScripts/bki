@@ -1,0 +1,2 @@
+the patient_informtion folder contains files which describe the 7 patients' information and ventilator settings
+the waveform_data folder contains 7 files which describe the waveform data of 7 patients
