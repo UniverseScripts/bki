@@ -46,21 +46,21 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # --- 3. Scikit-Learn: Gradient Boosting Classifier ---
-print("Training GradientBoostingClassifier (CPU Parallelized)...")
-gbc = GradientBoostingClassifier()
-param_grid = {
-    "max_depth": [3, 4, 5],
-    "learning_rate": [0.01, 0.1],
-    "n_estimators": [100, 300]
-}
-# n_jobs=-1 uses all available CPU threads
-grid_search = GridSearchCV(estimator=gbc, param_grid=param_grid, cv=5, n_jobs=-1, verbose=1)
-grid_search.fit(X_train, y_train)
+print("Training GradientBoostingClassifier with optimal parameters and Early Stopping...")
+best_model = GradientBoostingClassifier(
+    learning_rate=0.01,
+    max_depth=4,
+    n_estimators=10000,
+    n_iter_no_change=20,     # Early stopping patience
+    validation_fraction=0.1, # Use 10% of training data for early stopping validation
+    random_state=42,
+    verbose=1
+)
+best_model.fit(X_train, y_train)
 
-best_model = grid_search.best_estimator_
 y_pred_sklearn = best_model.predict(X_test)
 print("\n--- Scikit-Learn Model Results ---")
-print(f"Best Parameters: {grid_search.best_params_}")
+print(f"Final Estimators Used (Early Stopping): {best_model.n_estimators_}")
 print(f"Accuracy: {accuracy_score(y_test, y_pred_sklearn):.4f}")
 print(classification_report(y_test, y_pred_sklearn))
 
